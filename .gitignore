@@ -3,3 +3,5 @@
 .nx/cache
 .angular
 node_modules/
+*.pyc
+__pycache__
