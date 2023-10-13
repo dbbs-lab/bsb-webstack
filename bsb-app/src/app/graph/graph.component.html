@@ -1,0 +1,55 @@
+<div class="container">
+  <mat-toolbar color="primary">
+    <svg-icon
+      style="margin-top: 12px"
+      src="../../assets/bsb.svg"
+      [svgStyle]="{ 'width.px': 150 }"
+    ></svg-icon>
+  </mat-toolbar>
+  <mat-drawer-container style="flex-grow: 1" *ngrxLet="project$ as project">
+    <mat-drawer mode="side" style="width: 20%; min-width: 200px" opened>
+      <app-explorer [project]="project"> </app-explorer>
+    </mat-drawer>
+    <mat-drawer-content style="overflow: hidden">
+      <ngx-graph
+        [nodes]="(project.configuration$ | async)?.nodes ?? []"
+        [links]="(project.configuration$ | async)?.links ?? []"
+        layout="dagreCluster"
+      >
+        <ng-template #nodeTemplate let-node>
+          <svg:g class="node" (click)="selectComponent(node)">
+            <svg:rect
+              [attr.width]="node.dimension.width"
+              [attr.height]="node.dimension.height"
+              [attr.fill]="node.data.color"
+            />
+            <svg:text
+              alignment-baseline="central"
+              [attr.x]="10"
+              [attr.y]="node.dimension.height / 2"
+            >
+              {{ node.label }}
+            </svg:text>
+            <svg:g (click)="addComponent(node)">
+              <svg:circle
+                alignment-baseline="central"
+                [attr.cx]="node.dimension.width"
+                [attr.cy]="0"
+                [attr.r]="10"
+                [attr.fill]="'white'"
+              ></svg:circle>
+              <svg:text
+                alignment-baseline="central"
+                [attr.x]="node.dimension.width - 4"
+                [attr.y]="0"
+                [attr.fill]="'black'"
+              >
+                +
+              </svg:text>
+            </svg:g>
+          </svg:g>
+        </ng-template>
+      </ngx-graph>
+    </mat-drawer-content>
+  </mat-drawer-container>
+</div>

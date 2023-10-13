@@ -1,0 +1,13 @@
+<ng-container *ngrxLet="project.configuration$ as configuration">
+  <mat-form-field *ngrxLet="configuration.schema$ as schema">
+    <mat-label>Create</mat-label>
+    <mat-select>
+      <mat-option
+        *ngFor="let keyValue of schema.$defs | keyvalue"
+        [value]="keyValue.key"
+      >
+        {{ keyValue.key }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</ng-container>
