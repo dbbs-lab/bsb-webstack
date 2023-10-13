@@ -1,8 +1,17 @@
 import { Injectable } from '@angular/core';
 import { KernelService } from './kernel.service';
-import { BehaviorSubject, forkJoin, map, Observable, Subject, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  forkJoin,
+  map,
+  Observable,
+  Subject,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { Edge, Node } from '@swimlane/ngx-graph';
 import { JsonSchema, JsonSchemaNode } from './lib/json-schema';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface ProjectOptions {
   config?: Record<string, any>;
@@ -39,6 +48,19 @@ export class Configuration {
     );
   }
 
+  createChild(parent: Node): Node {
+    const node: Node = {
+      id: uuidv4(),
+      label: 'New node',
+      meta: {
+        data: {},
+      },
+    };
+    this.nodes.push(node);
+    this.links.push({ source: parent.id, target: node.id });
+    return node;
+  }
+
   resetConfig(input: ConfigurationInput) {
     this.nodes = [];
     this.links = [];
@@ -71,13 +93,13 @@ export class Configuration {
     let node: Node | undefined;
     if (path.length) {
       node = {
-        id: path.join('.'),
+        id: uuidv4(),
         label: String(path[path.length - 1]),
         meta: {
+          data,
           path,
           ref,
         },
-        data,
       };
       nodes.push(node);
       if (parent) {
@@ -134,6 +156,12 @@ export class Project {
 })
 export class ProjectService {
   activeProject$ = new BehaviorSubject(new Project(this.kernel, {}));
+  activeConfig$ = this.activeProject$.pipe(
+    switchMap((project) => project.configuration$)
+  );
+  activeSchema$ = this.activeConfig$.pipe(
+    switchMap((config) => config.schema$)
+  );
   constructor(private readonly kernel: KernelService) {
     this.activeProject$.value
       .resetConfig()

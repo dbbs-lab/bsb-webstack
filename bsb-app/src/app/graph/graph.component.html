@@ -14,6 +14,8 @@
       <ngx-graph
         [nodes]="(project.configuration$ | async)?.nodes ?? []"
         [links]="(project.configuration$ | async)?.links ?? []"
+        [update$]="updateGraph$"
+        [draggingEnabled]="false"
         layout="dagreCluster"
       >
         <ng-template #nodeTemplate let-node>
