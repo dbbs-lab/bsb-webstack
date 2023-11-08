@@ -5,10 +5,11 @@ import { SvgIconComponent } from 'angular-svg-icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { NgxGraphModule } from '@swimlane/ngx-graph';
 import { ExplorerComponent } from '../explorer/explorer.component';
-import { Configuration, ProjectService } from '../project.service';
+import { ProjectService } from '../project.service';
 import { LetDirective } from '@ngrx/component';
 import { ExplorerService } from '../explorer/explorer.service';
 import { Subject, withLatestFrom } from 'rxjs';
+import { Configuration } from '../lib/configuration';
 
 @Component({
   selector: 'app-graph',
@@ -49,7 +50,9 @@ export class GraphComponent implements OnDestroy {
     this.explorer.selectNode(node);
   }
 
-  selectComponent(node: any) {}
+  selectComponent(node: any) {
+    this.explorer.selectNode(node);
+  }
 
   ngOnDestroy() {
     this.modSub.unsubscribe();

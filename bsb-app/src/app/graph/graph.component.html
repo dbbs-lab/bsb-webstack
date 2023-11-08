@@ -8,7 +8,7 @@
   </mat-toolbar>
   <mat-drawer-container style="flex-grow: 1" *ngrxLet="project$ as project">
     <mat-drawer mode="side" style="width: 20%; min-width: 200px" opened>
-      <app-explorer [project]="project"> </app-explorer>
+      <app-explorer> </app-explorer>
     </mat-drawer>
     <mat-drawer-content style="overflow: hidden">
       <ngx-graph
